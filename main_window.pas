@@ -5,7 +5,8 @@ unit Main_Window;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Board;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Buttons,
+  StdCtrls, Board;
 
 type
 
@@ -13,6 +14,8 @@ type
 
   TForm1 = class(TForm)
     Board1: TBoard;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
   private
     { private declarations }
   public
@@ -25,6 +28,13 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TForm1 }
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  Board1.setSize(8, 10);
+end;
 
 end.
 
