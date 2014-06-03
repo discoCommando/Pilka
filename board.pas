@@ -22,10 +22,12 @@ type
     procedure drawBall(x, y: integer; col: TColor); //x, y względem boiska
     procedure drawBall(x, y: integer); //x, y względem boiska
     procedure drawRect(x, y: integer); //x, y względem boiska
-    procedure makeMove(x, y: integer); //x ,y względem boiska
+    procedure makeMove(x, y, playerNo: integer);
+    //x ,y względem boiska, ruch pilki do punktu x, y
+    procedure drawLine(x, y: integer; col: TColor);//x ,y względem boiska
   const
     RECT_SIZE = 38;
-    BALL_RADIUS = 5;
+    BALL_RADIUS = 3;
   protected
     { Protected declarations }
   public
@@ -61,7 +63,8 @@ begin
   self.lastBallPosX := x div 2;
   self.lastBallPosY := y div 2;
   self.drawBall(x div 2, y div 2);
-  self.drawBall(x div 2 + 1, y div 2);
+  self.makeMove(x div 2, y div 2 + 1, 1);
+  self.makeMove(lastBallPosX + 1, lastBallPosY - 1, 2);
 end;
 
 procedure TBoard.drawGround(x, y: integer);
@@ -132,6 +135,8 @@ begin
     RECT_SIZE * (x div 2), RECT_SIZE * (y + 3));
   self.Canvas.Line(RECT_SIZE * (x div 2 + 2), RECT_SIZE * (y + 2),
     RECT_SIZE * (x div 2 + 2), RECT_SIZE * (y + 3));
+
+  self.Canvas.Pen.Width := 2;
 end;
 
 procedure TBoard.drawBall(x, y: integer; col: TColor);
@@ -155,12 +160,40 @@ begin
 end;
 
 procedure TBoard.drawRect(x, y: integer);
-var counter: Integer;
+var
+  counter: integer;
 begin
 
   self.Canvas.Brush.Color := $000C600C;
-  self.Canvas.FillRect(rects[sizeY + 4*x + 2 + y]);
+  self.Canvas.FillRect(rects[sizeY + 4 * x + 2 + y]);
 
+end;
+
+procedure TBoard.makeMove(x, y, playerNo: integer);
+var
+  col: TColor;
+begin
+  if playerNo = 1 then
+  begin
+    col := clYellow;
+  end
+  else
+  begin
+    col := clRed;
+  end;
+  self.Canvas.Pen.Color := col;
+  self.drawLine(x, y, col);
+  self.drawBall(lastBallPosX, lastBallPosY, col);
+  self.drawBall(x, y, clWhite);
+  lastBallPosX := x;
+  lastBallPosY := y;
+
+end;
+
+procedure TBoard.drawLine(x, y: integer; col: TColor);
+begin
+  self.Canvas.Line((lastBallPosX + 1) * RECT_SIZE, (lastBallPosY + 2) * RECT_SIZE,
+    (x + 1) * RECT_SIZE, (y + 2) * RECT_SIZE);
 end;
 
 end.

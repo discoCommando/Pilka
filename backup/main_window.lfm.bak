@@ -1,11 +1,15 @@
 object Form1: TForm1
-  Left = 188
+  Left = 158
   Height = 543
-  Top = 52
+  Top = 134
   Width = 794
-  Caption = 'Form1'
+  AutoSize = True
+  Caption = 'Piłka'
   ClientHeight = 543
   ClientWidth = 794
+  Color = 811020
+  Menu = MainMenu1
+  OnCreate = FormCreate
   LCLVersion = '1.0.12.0'
   object Board1: TBoard
     Left = -8
@@ -15,11 +19,42 @@ object Form1: TForm1
   end
   object Button1: TButton
     Left = 680
-    Height = 59
+    Height = 88
     Top = 104
-    Width = 24
+    Width = 80
     Caption = 'Button1'
     OnClick = Button1Click
     TabOrder = 0
+  end
+  object MainMenu1: TMainMenu
+    left = 536
+    top = 184
+    object PlikMenuItem: TMenuItem
+      Caption = 'Plik'
+      OnClick = PlikMenuItemClick
+      object NowaGraMenuItem: TMenuItem
+        Caption = 'Nowa Gra'
+        OnClick = NowaGraMenuItemClick
+      end
+    end
+    object OpcjeMenuItem: TMenuItem
+      Caption = 'Opcje'
+      OnClick = OpcjeMenuItemClick
+      object RozmiarMenuItem: TMenuItem
+        Caption = 'Rozmiar Planszy'
+        object R8x10MenuItem: TMenuItem
+          Caption = '8x10'
+          OnClick = R8x10MenuItemClick
+        end
+        object R10x10MenuItem: TMenuItem
+          Caption = '10x10'
+          OnClick = R10x10MenuItemClick
+        end
+        object R15x15MenuItem: TMenuItem
+          Caption = '15x15'
+          OnClick = R15x15MenuItemClick
+        end
+      end
+    end
   end
 end
