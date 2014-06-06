@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Buttons,
-  StdCtrls, Menus, ActnList, Board, board_Representation, Game;
+  StdCtrls, Menus, ActnList, Board, boardRepresentation, Game;
 
 type
 
@@ -15,6 +15,7 @@ type
   TForm1 = class(TForm)
     Board1: TBoard;
     Button1: TButton;
+    Button2: TButton;
     Label1: TLabel;
     MainMenu1: TMainMenu;
     R8x10MenuItem: TMenuItem;
@@ -24,7 +25,9 @@ type
     PlikMenuItem: TMenuItem;
     NowaGraMenuItem: TMenuItem;
     OpcjeMenuItem: TMenuItem;
+    procedure Board1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Label1Click(Sender: TObject);
     procedure R10x10MenuItemClick(Sender: TObject);
@@ -47,6 +50,7 @@ type
 
 var
   Form1: TForm1;
+  Game1: TGame;
 
 implementation
 
@@ -61,10 +65,21 @@ begin
   //Board1.setSize(12, 12);
   rep := TBoardRep.Create();
   rep.setSize(12, 12);
-  rep.points[6, 6].addMove(1, 0, 1);
-  rep.points[1, 6].addMove(1, -1, 1);
-  rep.setBallPos(5, 5);
+  rep.setBallPos(6, 6);
   Board1.drawFromBR(rep);
+  Game1 := TGame.Create(Board1, True, True);
+end;
+
+procedure TForm1.Board1Click(Sender: TObject);
+begin
+   Game1.OnClick();
+end;
+
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+   self.Board1.makeMove(5,5,1);
+  Button2.Caption := inttostr(49152 shr 14);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

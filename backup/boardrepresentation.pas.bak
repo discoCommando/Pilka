@@ -1,11 +1,11 @@
-unit Board_Representation;
+unit BoardRepresentation;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, glib2;
+  Classes, SysUtils, dialogs;
 
 type
 
@@ -19,7 +19,7 @@ type
     procedure addMove(moveUp, moveRight, byWho: integer);
     //moveUp = 1 - do góry, moveUp = 0 - nic, moveUp = -1 - do dołu etc.
     function isFree(): boolean;
-
+    function isFreeLine(direction: integer): boolean;
   end;
 
   TMoveRep = class
@@ -41,6 +41,15 @@ type
     function getContainer(): TList;
   end;
 
+  TPossibleMoves = class
+  public
+    counter: integer;
+    function Next(): TPoint;
+    constructor Create();
+    procedure reset();
+  private
+    moves: array[0..7] of TPoint;
+  end;
 
   TBoardRep = class
   const
@@ -52,23 +61,17 @@ type
     constructor Create();
     function giveMoves(): TMoveCont;
     procedure setSize(x, y: integer);
-    procedure addMove(fromx, fromy, tox, toy: integer);
+    procedure addMove(fromx, fromy, tox, toy, who: integer);
     procedure setBallPos(x, y: integer);
-
+    function isLineFree(fromX, fromY, toX, toY: integer): boolean;
 
   private
+    posMoves: TPossibleMoves;
   protected
 
   end;
 
-  TPossibleMoves = class
-  public
-    function Next(): TPoint;
-    constructor Create();
-  private
-    counter: integer;
-    moves: array[0..7] of TPoint;
-  end;
+
 
 
 implementation
@@ -85,6 +88,7 @@ begin
       self.points[counterx, countery] := TBoardPoint.Create();
     end;
   end;
+  posMoves := TPossibleMoves.Create;
 end;
 
 function TBoardRep.giveMoves(): TMoveCont;
@@ -98,9 +102,11 @@ begin
   self.sizeY := y;
 end;
 
-procedure TBoardRep.addMove(fromx, fromy, tox, toy: integer);
+procedure TBoardRep.addMove(fromx, fromy, tox, toy, who: integer);
 begin
-
+  self.points[fromx, fromy].addMove(fromx - tox, toy - fromy, who);
+  ShowMessage(inttostr(self.points[fromx, fromy].pt));
+  self.points[tox, toy].addMove( tox - fromx, fromy - toy, who);
 end;
 
 procedure TBoardRep.setBallPos(x, y: integer);
@@ -231,7 +237,36 @@ end;
 function TPossibleMoves.Next(): TPoint;
 begin
   counter := counter + 1;
+
   Next := moves[counter - 1];
+end;
+
+
+procedure TPossibleMoves.reset();
+begin
+  counter := 0;
+end;
+
+function TBoardRep.isLineFree(fromX, fromY, toX, toY: integer): boolean;
+var
+  tempPoint, vector: TPoint;
+begin
+  posMoves.reset();
+  tempPoint := posMoves.Next();
+  vector.X := fromX - toX;
+  vector.Y := toY - fromY;
+  while ((vector.X <> tempPoint.X) or (vector.Y <> tempPoint.Y)) do
+  begin
+    tempPoint := posMoves.Next();
+  end;
+  showMessage(inttostr(posMoves.counter));
+  isLineFree := self.points[fromX, fromY].isFreeLine(posMoves.counter - 1);
+end;
+
+
+function TBoardPoint.isFreeLine(direction: integer): boolean;
+begin
+  isFreeLine := ((self.pt shr (direction * 2)) and 1) = 0;
 end;
 
 end.

@@ -6,25 +6,19 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  glib2, Board_Representation;
+  glib2, BoardRepresentation;
 
 type
   TBoard = class(TImage)
   private
     { Private declarations }
-    lastBallPosX: integer;
-    lastBallPosY: integer;
-    sizeX: integer;
-    sizeY: integer;
     rects: array [0..1599] of TRect;
-    myBoardRep: TBoardRep;
     procedure drawRects(x, y: integer);  //rozmiary planszy
     procedure drawGround(x, y: integer); //rozmiary planszy
     procedure drawLines(x, y: integer); //rysowanie granic boiska
     procedure drawBall(x, y: integer; col: TColor); //x, y względem boiska
     procedure drawBall(x, y: integer); //x, y względem boiska
     procedure drawRect(x, y: integer); //x, y względem boiska
-    procedure makeMove(x, y, playerNo: integer);
     //x ,y względem boiska, ruch pilki do punktu x, y
     procedure drawLine(x, y: integer; col: TColor);//x ,y względem boiska
     procedure drawLine(fromx, fromy, tox, toy: integer; col: TColor);
@@ -37,10 +31,16 @@ type
     { Protected declarations }
   public
     { Public declarations }
+    lastBallPosX: integer;
+    lastBallPosY: integer;
+    sizeX: integer;
+    sizeY: integer;
+    myBoardRep: TBoardRep;
     constructor Create(AOwner: TComponent); override;
     procedure setSize(x, y: integer);
-
+    procedure makeMove(x, y, playerNo: integer); //x ,y - wspolrzedne punktu docelowego
     procedure drawFromBR(var rep: TBoardRep);
+    function giveClickedPoint(): TPoint; //daje współrzędne punktu
   published
     { Published declarations }
   end;
@@ -190,9 +190,9 @@ begin
   self.drawLine(x, y, col);
   self.drawBall(lastBallPosX, lastBallPosY, col);
   self.drawBall(x, y, clWhite);
+  self.myBoardRep.addMove(lastBallPosX, lastBallPosY, x, y);
   lastBallPosX := x;
   lastBallPosY := y;
-
 end;
 
 procedure TBoard.drawLine(x, y: integer; col: TColor);
@@ -225,6 +225,8 @@ begin
       self.drawTBoardPoint(rep.points[counterx, countery], counterx, countery);
     end;
   end;
+  self.lastBallPosX:=rep.ballPosX;
+  self.lastBallPosY:=rep.ballPosY;
   self.drawBall(rep.ballPosX, rep.ballPosY, clWhite);
   self.myBoardRep := rep;
 end;
@@ -254,6 +256,25 @@ begin
     end;
     tempVar := tempVar shr 2;
   end;
+end;
+
+function TBoard.giveClickedPoint(): TPoint; // (-1, -1) jeżeli żaden nie jest
+var
+  res, clicked: TPoint;
+begin
+  clicked := self.ScreenToClient(mouse.CursorPos);
+  if ((clicked.X + self.BALL_RADIUS) mod self.RECT_SIZE > self.BALL_RADIUS * 3) or
+    ((clicked.Y + self.BALL_RADIUS) mod self.RECT_SIZE > self.BALL_RADIUS * 3) then
+  begin
+    res.X := -1;
+    res.Y := -1;
+  end
+  else
+  begin
+    res.X := (clicked.X + self.BALL_RADIUS*2) div self.RECT_SIZE - 1;
+    res.Y := (clicked.Y + self.BALL_RADIUS*2) div self.RECT_SIZE - 2;
+  end;
+  giveClickedPoint := res;
 end;
 
 end.

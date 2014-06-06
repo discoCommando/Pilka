@@ -16,6 +16,7 @@ object Form1: TForm1
     Height = 536
     Top = 0
     Width = 539
+    OnClick = Board1Click
   end
   object Button1: TButton
     Left = 680
@@ -34,6 +35,15 @@ object Form1: TForm1
     Caption = 'Label1'
     ParentColor = False
     OnClick = Label1Click
+  end
+  object Button2: TButton
+    Left = 697
+    Height = 67
+    Top = 381
+    Width = 80
+    Caption = 'Button2'
+    OnClick = Button2Click
+    TabOrder = 1
   end
   object MainMenu1: TMainMenu
     left = 536
