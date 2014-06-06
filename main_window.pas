@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Buttons,
-  StdCtrls, Menus, ActnList, Board;
+  StdCtrls, Menus, ActnList, Board, boardRepresentation, Game;
 
 type
 
@@ -15,6 +15,7 @@ type
   TForm1 = class(TForm)
     Board1: TBoard;
     Button1: TButton;
+    Label1: TLabel;
     MainMenu1: TMainMenu;
     R8x10MenuItem: TMenuItem;
     R15x15MenuItem: TMenuItem;
@@ -25,6 +26,7 @@ type
     OpcjeMenuItem: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Label1Click(Sender: TObject);
     procedure R10x10MenuItemClick(Sender: TObject);
     procedure R15x15MenuItemClick(Sender: TObject);
     procedure R8x10MenuItemClick(Sender: TObject);
@@ -53,13 +55,33 @@ implementation
 { TForm1 }
 
 procedure TForm1.Button1Click(Sender: TObject);
+var
+  rep: TBoardRep;
 begin
-  Board1.setSize(12, 12);
+  //Board1.setSize(12, 12);
+  rep := TBoardRep.Create();
+  rep.setSize(12, 12);
+  rep.points[6, 6].addMove(1, 0, 1);
+  rep.points[1, 6].addMove(1, -1, 1);
+  rep.setBallPos(5, 5);
+  Board1.drawFromBR(rep);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.Label1Click(Sender: TObject);
+var
+  pt, pt2: TBoardPoint;
+begin
+  pt := TBoardPoint.Create;
+  //pt.addMove(1, 0, 0);
+  pt2 := pt;
+  if pt2.isFree() then
+
+    Label1.Caption := 'TAK';
 end;
 
 procedure TForm1.checkMenuItem(item: TMenuItem);
@@ -76,6 +98,7 @@ end;
 procedure TForm1.R10x10MenuItemClick(Sender: TObject);
 var
   counter: integer;
+
 begin
   sizeX := 10;
   sizeY := 10;

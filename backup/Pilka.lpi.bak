@@ -38,7 +38,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="4">
       <Unit0>
         <Filename Value="Pilka.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -52,6 +52,16 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main_Window"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="boardrepresentation.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BoardRepresentation"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="game.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Game"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

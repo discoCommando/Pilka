@@ -5,7 +5,8 @@ unit Board;
 interface
 
 uses
-  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls;
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  glib2, Board_Representation;
 
 type
   TBoard = class(TImage)
@@ -16,6 +17,7 @@ type
     sizeX: integer;
     sizeY: integer;
     rects: array [0..1599] of TRect;
+    myBoardRep: TBoardRep;
     procedure drawRects(x, y: integer);  //rozmiary planszy
     procedure drawGround(x, y: integer); //rozmiary planszy
     procedure drawLines(x, y: integer); //rysowanie granic boiska
@@ -25,6 +27,9 @@ type
     procedure makeMove(x, y, playerNo: integer);
     //x ,y względem boiska, ruch pilki do punktu x, y
     procedure drawLine(x, y: integer; col: TColor);//x ,y względem boiska
+    procedure drawLine(fromx, fromy, tox, toy: integer; col: TColor);
+    procedure test();
+    procedure drawTBoardPoint(var pt: TBoardPoint; x, y: integer);
   const
     RECT_SIZE = 38;
     BALL_RADIUS = 3;
@@ -34,6 +39,8 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     procedure setSize(x, y: integer);
+
+    procedure drawFromBR(var rep: TBoardRep);
   published
     { Published declarations }
   end;
@@ -63,8 +70,6 @@ begin
   self.lastBallPosX := x div 2;
   self.lastBallPosY := y div 2;
   self.drawBall(x div 2, y div 2);
-  self.makeMove(x div 2, y div 2 + 1, 1);
-  self.makeMove(lastBallPosX + 1, lastBallPosY - 1, 2);
 end;
 
 procedure TBoard.drawGround(x, y: integer);
@@ -183,7 +188,7 @@ begin
   end;
   self.Canvas.Pen.Color := col;
   self.drawLine(x, y, col);
-  self.drawBall(lastBallPosX, lastBallPosY, $00828282);
+  self.drawBall(lastBallPosX, lastBallPosY, col);
   self.drawBall(x, y, clWhite);
   lastBallPosX := x;
   lastBallPosY := y;
@@ -194,6 +199,61 @@ procedure TBoard.drawLine(x, y: integer; col: TColor);
 begin
   self.Canvas.Line((lastBallPosX + 1) * RECT_SIZE, (lastBallPosY + 2) * RECT_SIZE,
     (x + 1) * RECT_SIZE, (y + 2) * RECT_SIZE);
+end;
+
+procedure TBoard.test;
+begin
+
+end;
+
+procedure TBoard.drawLine(fromx, fromy, tox, toy: integer; col: TColor);
+begin
+  self.Canvas.Pen.Color := col;
+  self.Canvas.Line((fromx + 1) * RECT_SIZE, (fromy + 2) * RECT_SIZE,
+    (tox + 1) * RECT_SIZE, (toy + 2) * RECT_SIZE);
+end;
+
+procedure TBoard.drawFromBR(var rep: TBoardRep);
+var
+  counterx, countery: integer;
+begin
+  self.setSize(rep.sizeX, rep.sizeY);
+  for counterx := 0 to rep.sizeX - 1 do
+  begin
+    for countery := 0 to rep.sizeY - 1 do
+    begin
+      self.drawTBoardPoint(rep.points[counterx, countery], counterx, countery);
+    end;
+  end;
+  self.drawBall(rep.ballPosX, rep.ballPosY, clWhite);
+  self.myBoardRep := rep;
+end;
+
+
+procedure TBoard.drawTBoardPoint(var pt: TBoardPoint; x, y: integer);
+var
+  counter, tempVar: integer;
+  tempMove: TPoint;
+  moves: TPossibleMoves;
+begin
+  tempVar := pt.pt;
+  moves := TPossibleMoves.Create();
+  for counter := 0 to 7 do
+  begin
+    tempMove := moves.Next();
+    if (tempVar and 1) = 1 then
+    begin
+      if ((tempVar shr 1) and 1) = 1 then
+      begin
+        self.drawLine(x, y, x - tempMove.Y, y - tempMove.X, clYellow);
+      end
+      else
+      begin
+        self.drawLine(x, y, x - tempMove.Y, y - tempMove.X, clRed);
+      end;
+    end;
+    tempVar := tempVar shr 2;
+  end;
 end;
 
 end.
