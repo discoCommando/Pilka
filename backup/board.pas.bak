@@ -190,7 +190,7 @@ begin
   self.drawLine(x, y, col);
   self.drawBall(lastBallPosX, lastBallPosY, col);
   self.drawBall(x, y, clWhite);
-  self.myBoardRep.addMove(lastBallPosX, lastBallPosY, x, y);
+  self.myBoardRep.addMove(lastBallPosX, lastBallPosY, x, y, playerNo);
   lastBallPosX := x;
   lastBallPosY := y;
 end;
@@ -218,15 +218,15 @@ var
   counterx, countery: integer;
 begin
   self.setSize(rep.sizeX, rep.sizeY);
-  for counterx := 0 to rep.sizeX - 1 do
+  for counterx := -1 to rep.sizeX + 1 do
   begin
-    for countery := 0 to rep.sizeY - 1 do
+    for countery := -1 to rep.sizeY + 1 do
     begin
       self.drawTBoardPoint(rep.points[counterx, countery], counterx, countery);
     end;
   end;
-  self.lastBallPosX:=rep.ballPosX;
-  self.lastBallPosY:=rep.ballPosY;
+  self.lastBallPosX := rep.ballPosX;
+  self.lastBallPosY := rep.ballPosY;
   self.drawBall(rep.ballPosX, rep.ballPosY, clWhite);
   self.myBoardRep := rep;
 end;
@@ -247,11 +247,11 @@ begin
     begin
       if ((tempVar shr 1) and 1) = 1 then
       begin
-        self.drawLine(x, y, x - tempMove.Y, y - tempMove.X, clYellow);
+        self.drawLine(x, y, x - tempMove.X, y + tempMove.Y, clYellow);
       end
       else
       begin
-        self.drawLine(x, y, x - tempMove.Y, y - tempMove.X, clRed);
+        self.drawLine(x, y, x - tempMove.X, y + tempMove.Y, clRed);
       end;
     end;
     tempVar := tempVar shr 2;
@@ -271,8 +271,18 @@ begin
   end
   else
   begin
-    res.X := (clicked.X + self.BALL_RADIUS*2) div self.RECT_SIZE - 1;
-    res.Y := (clicked.Y + self.BALL_RADIUS*2) div self.RECT_SIZE - 2;
+    res.X := (clicked.X + self.BALL_RADIUS * 2) div self.RECT_SIZE - 1;
+    res.Y := (clicked.Y + self.BALL_RADIUS * 2) div self.RECT_SIZE - 2;
+  end;
+
+  if (res.X < 0) or (res.X > self.sizeX) or (res.Y > self.sizeY) or (res.Y < 0) then
+  begin
+    if not (((res.Y = self.sizeY + 1) or (res.Y = -1)) and
+      (abs(self.sizeX div 2 - res.X) <= 1)) then
+    begin
+      res.X := -1;
+      res.Y := -1;
+    end;
   end;
   giveClickedPoint := res;
 end;

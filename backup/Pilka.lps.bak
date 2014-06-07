@@ -8,7 +8,7 @@
         <Filename Value="Pilka.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Pilka"/>
-        <UsageCount Value="77"/>
+        <UsageCount Value="88"/>
       </Unit0>
       <Unit1>
         <Filename Value="main_window.pas"/>
@@ -19,9 +19,9 @@
         <UnitName Value="Main_Window"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="136"/>
-        <CursorPos X="37" Y="142"/>
-        <UsageCount Value="77"/>
+        <TopLine Value="60"/>
+        <CursorPos X="28" Y="70"/>
+        <UsageCount Value="88"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -29,12 +29,11 @@
         <Filename Value="boardrepresentation.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="BoardRepresentation"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="246"/>
-        <CursorPos X="43" Y="262"/>
-        <UsageCount Value="59"/>
+        <TopLine Value="308"/>
+        <CursorPos X="5" Y="311"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -43,19 +42,20 @@
         <UnitName Value="Game"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="58"/>
-        <CursorPos X="37" Y="70"/>
-        <UsageCount Value="33"/>
+        <TopLine Value="85"/>
+        <CursorPos X="59" Y="90"/>
+        <UsageCount Value="44"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="board.pas"/>
         <UnitName Value="Board"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="181"/>
-        <CursorPos X="29" Y="195"/>
-        <UsageCount Value="37"/>
+        <TopLine Value="211"/>
+        <CursorPos X="21" Y="223"/>
+        <UsageCount Value="42"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -63,19 +63,20 @@
         <UnitName Value="Board"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="204"/>
+        <TopLine Value="213"/>
         <CursorPos X="14" Y="238"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="41"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="../Diaballik/OknoGlowne.pas"/>
+        <HasResources Value="True"/>
         <UnitName Value="OknoGlowne"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="9"/>
-        <CursorPos X="19" Y="13"/>
-        <UsageCount Value="19"/>
+        <CursorPos X="74" Y="21"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit6>
       <Unit7>
@@ -83,9 +84,9 @@
         <UnitName Value="Gra"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="133"/>
+        <TopLine Value="92"/>
         <CursorPos X="30" Y="77"/>
-        <UsageCount Value="19"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit7>
     </Units>
@@ -94,124 +95,124 @@
     </General>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="../Diaballik/OknoGlowne.pas"/>
-        <Caret Line="12" Column="28" TopLine="10"/>
+        <Filename Value="main_window.pas"/>
+        <Caret Line="54" Column="5" TopLine="29"/>
       </Position1>
       <Position2>
-        <Filename Value="board.pas"/>
-        <Caret Line="51" Column="16" TopLine="40"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="72" Column="11" TopLine="52"/>
       </Position2>
       <Position3>
-        <Filename Value="board.pas"/>
-        <Caret Line="265" Column="24" TopLine="249"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="256" Column="51" TopLine="234"/>
       </Position3>
       <Position4>
-        <Filename Value="board.pas"/>
-        <Caret Line="261" Column="9" TopLine="249"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="66" Column="24" TopLine="54"/>
       </Position4>
       <Position5>
-        <Filename Value="board.pas"/>
-        <Caret Line="266" Column="30" TopLine="249"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="246" Column="64" TopLine="233"/>
       </Position5>
       <Position6>
-        <Filename Value="board.pas"/>
-        <Caret Line="261" Column="32" TopLine="256"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="243" Column="26" TopLine="234"/>
       </Position6>
       <Position7>
-        <Filename Value="main_window.pas"/>
-        <Caret Line="67" Column="44" TopLine="52"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="251" Column="20" TopLine="7"/>
       </Position7>
       <Position8>
-        <Filename Value="main_window.pas"/>
-        <Caret Line="69" Column="44" TopLine="54"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="109" Column="56" TopLine="97"/>
       </Position8>
       <Position9>
-        <Filename Value="main_window.pas"/>
-        <Caret Line="76" Column="54" TopLine="72"/>
+        <Filename Value="board.pas"/>
+        <Caret Line="239" Column="19" TopLine="225"/>
       </Position9>
       <Position10>
         <Filename Value="main_window.pas"/>
-        <Caret Line="82" Column="1" TopLine="82"/>
+        <Caret Line="96" Column="26" TopLine="78"/>
       </Position10>
       <Position11>
-        <Filename Value="board.pas"/>
-        <Caret Line="264" Column="7" TopLine="252"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="108" Column="14" TopLine="95"/>
       </Position11>
       <Position12>
-        <Filename Value="board.pas"/>
-        <Caret Line="265" Column="77" TopLine="255"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="94" Column="20" TopLine="84"/>
       </Position12>
       <Position13>
-        <Filename Value="board.pas"/>
-        <Caret Line="273" Column="48" TopLine="255"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="108" Column="14" TopLine="95"/>
       </Position13>
       <Position14>
-        <Filename Value="game.pas"/>
-        <Caret Line="63" Column="51" TopLine="41"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="258" Column="59" TopLine="243"/>
       </Position14>
       <Position15>
-        <Filename Value="main_window.pas"/>
-        <Caret Line="75" Column="22" TopLine="57"/>
+        <Filename Value="boardrepresentation.pas"/>
+        <Caret Line="108" Column="3" TopLine="95"/>
       </Position15>
       <Position16>
         <Filename Value="main_window.pas"/>
-        <Caret Line="70" Column="8" TopLine="60"/>
+        <Caret Line="48" Column="32" TopLine="46"/>
       </Position16>
       <Position17>
-        <Filename Value="main_window.pas"/>
-        <Caret Line="54" Column="5" TopLine="29"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="128" Column="28" TopLine="105"/>
       </Position17>
       <Position18>
         <Filename Value="game.pas"/>
-        <Caret Line="72" Column="11" TopLine="52"/>
+        <Caret Line="81" Column="19" TopLine="69"/>
       </Position18>
       <Position19>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="256" Column="51" TopLine="234"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="94" Column="64" TopLine="82"/>
       </Position19>
       <Position20>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="66" Column="24" TopLine="54"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="26" Column="28" TopLine="10"/>
       </Position20>
       <Position21>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="246" Column="64" TopLine="233"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="8" Column="30" TopLine="1"/>
       </Position21>
       <Position22>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="243" Column="26" TopLine="234"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="26" Column="27" TopLine="13"/>
       </Position22>
       <Position23>
-        <Filename Value="board.pas"/>
-        <Caret Line="218" Column="79" TopLine="255"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="8" Column="53" TopLine="1"/>
       </Position23>
       <Position24>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="251" Column="20" TopLine="7"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="17" Column="96" TopLine="10"/>
       </Position24>
       <Position25>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="109" Column="56" TopLine="97"/>
+        <Filename Value="main_window.pas"/>
+        <Caret Line="9" Column="3" TopLine="1"/>
       </Position25>
       <Position26>
-        <Filename Value="board.pas"/>
-        <Caret Line="239" Column="19" TopLine="225"/>
+        <Filename Value="main_window.pas"/>
+        <Caret Line="64" Column="46" TopLine="60"/>
       </Position26>
       <Position27>
         <Filename Value="main_window.pas"/>
-        <Caret Line="96" Column="26" TopLine="78"/>
+        <Caret Line="98" Column="7" TopLine="150"/>
       </Position27>
       <Position28>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="108" Column="14" TopLine="95"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="124" Column="3" TopLine="105"/>
       </Position28>
       <Position29>
-        <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="94" Column="20" TopLine="84"/>
+        <Filename Value="game.pas"/>
+        <Caret Line="31" Column="32" TopLine="13"/>
       </Position29>
       <Position30>
         <Filename Value="boardrepresentation.pas"/>
-        <Caret Line="108" Column="14" TopLine="95"/>
+        <Caret Line="294" Column="70" TopLine="282"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

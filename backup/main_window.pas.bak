@@ -16,7 +16,8 @@ type
     Board1: TBoard;
     Button1: TButton;
     Button2: TButton;
-    Label1: TLabel;
+    EndTurnButton: TButton;
+    GameLabel: TLabel;
     MainMenu1: TMainMenu;
     R8x10MenuItem: TMenuItem;
     R15x15MenuItem: TMenuItem;
@@ -28,8 +29,8 @@ type
     procedure Board1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure EndTurnButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Label1Click(Sender: TObject);
     procedure R10x10MenuItemClick(Sender: TObject);
     procedure R15x15MenuItemClick(Sender: TObject);
     procedure R8x10MenuItemClick(Sender: TObject);
@@ -51,6 +52,7 @@ type
 var
   Form1: TForm1;
   Game1: TGame;
+  gameOn: boolean;
 
 implementation
 
@@ -66,38 +68,44 @@ begin
   rep := TBoardRep.Create();
   rep.setSize(12, 12);
   rep.setBallPos(6, 6);
+  rep.addMove(6,6,5,5,0);
+  rep.addMove(5,5,4,5,0);
+  rep.addMove(4,5,4,4,0);
   Board1.drawFromBR(rep);
-  Game1 := TGame.Create(Board1, True, True);
+  Game1 := TGame.Create(Board1, True, True, self.EndTurnButton, self.GameLabel);
+  gameOn := True;
 end;
 
 procedure TForm1.Board1Click(Sender: TObject);
 begin
-   Game1.OnClick();
+  if (gameOn) then
+  begin
+    Game1.OnClick();
+
+  end;
 end;
 
 
 procedure TForm1.Button2Click(Sender: TObject);
 begin
-   self.Board1.makeMove(5,5,1);
-  Button2.Caption := inttostr(49152 shr 14);
+  self.Board1.makeMove(5, 5, 1);
+  Button2.Caption := IntToStr((49152 shr 14) and 1);
+end;
+
+procedure TForm1.EndTurnButtonClick(Sender: TObject);
+begin
+  if (gameOn) then
+  begin
+    Game1.endTurn();
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-
+  gameOn := False;
 end;
 
-procedure TForm1.Label1Click(Sender: TObject);
-var
-  pt, pt2: TBoardPoint;
-begin
-  pt := TBoardPoint.Create;
-  //pt.addMove(1, 0, 0);
-  pt2 := pt;
-  if pt2.isFree() then
 
-    Label1.Caption := 'TAK';
-end;
 
 procedure TForm1.checkMenuItem(item: TMenuItem);
 var

@@ -5,7 +5,7 @@ unit BoardRepresentation;
 interface
 
 uses
-  Classes, SysUtils, dialogs;
+  Classes, SysUtils, Dialogs;
 
 type
 
@@ -57,7 +57,7 @@ type
   public
     ballPosX, ballPosY: integer;
     sizeX, sizeY: integer;
-    points: array [0..MAX_SIZE, -1..MAX_SIZE + 1] of TBoardPoint; //x, y
+    points: array [-1..MAX_SIZE + 1, -2..MAX_SIZE + 2] of TBoardPoint; //x, y
     constructor Create();
     function giveMoves(): TMoveCont;
     procedure setSize(x, y: integer);
@@ -67,6 +67,7 @@ type
 
   private
     posMoves: TPossibleMoves;
+    procedure borders();
   protected
 
   end;
@@ -81,9 +82,9 @@ constructor TBoardRep.Create();
 var
   counterx, countery: integer;
 begin
-  for counterx := 0 to MAX_SIZE do
+  for counterx := -1 to MAX_SIZE + 1 do
   begin
-    for countery := -1 to MAX_SIZE + 1 do
+    for countery := -2 to MAX_SIZE + 2 do
     begin
       self.points[counterx, countery] := TBoardPoint.Create();
     end;
@@ -100,12 +101,13 @@ procedure TBoardRep.setSize(x, y: integer);
 begin
   self.sizeX := x;
   self.sizeY := y;
+  self.borders();
 end;
 
 procedure TBoardRep.addMove(fromx, fromy, tox, toy, who: integer);
 begin
   self.points[fromx, fromy].addMove(fromx - tox, toy - fromy, who);
-  self.points[tox, toy].addMove( tox - fromx, fromy - toy, who);
+  self.points[tox, toy].addMove(tox - fromx, fromy - toy, who);
 end;
 
 procedure TBoardRep.setBallPos(x, y: integer);
@@ -203,8 +205,15 @@ begin
 end;
 
 function TBoardPoint.isFree(): boolean;
+var
+  counter, i: integer;
 begin
-  isFree := pt = 0;
+  counter := 0;
+  for i := 0 to 7 do
+  begin
+    counter := counter + ((self.pt shr (i * 2)) and 1);
+  end;
+  isFree := counter <= 1;
 end;
 
 
@@ -265,6 +274,65 @@ end;
 function TBoardPoint.isFreeLine(direction: integer): boolean;
 begin
   isFreeLine := ((self.pt shr (direction * 2)) and 1) = 0;
+end;
+
+
+procedure TBoardRep.borders();
+var
+  counter: integer;
+begin
+  //boki
+  for counter := 0 to self.sizeY do
+  begin
+    self.addMove(0, counter, 0, counter + 1, 0);
+    self.addMove(0, counter, -1, counter, 0);
+    self.addMove(0, counter, -1, counter - 1, 0);
+    self.addMove(0, counter, -1, counter + 1, 0);
+    self.addMove(self.sizeX, counter, self.sizeX, counter + 1, 0);
+    self.addMove(self.sizeX, counter, self.sizeX + 1, counter, 0);
+    self.addMove(self.sizeX, counter, self.sizeX + 1, counter - 1, 0);
+    self.addMove(self.sizeX, counter, self.sizeX + 1, counter + 1, 0);
+  end;
+  //góra i dół
+  for counter := 0 to self.sizeX div 2 - 2 do
+  begin
+    self.addMove(counter, 0, counter + 1, 0, 0);
+    self.addMove(counter, 0, counter - 1, -1, 0);
+    self.addMove(counter, 0, counter + 1, -1, 0);
+    self.addMove(counter, 0, counter, -1, 0);
+    self.addMove(counter, self.sizeY, counter + 1, self.sizeY, 0);
+    self.addMove(counter, self.sizeY, counter - 1, self.sizeY + 1, 0);
+    self.addMove(counter, self.sizeY, counter + 1, self.sizeY + 1, 0);
+    self.addMove(counter, self.sizeY, counter, self.sizeY + 1, 0);
+  end;
+  for counter := self.sizeX downto self.sizeX div 2 + 2 do
+  begin
+    self.addMove(counter, 0, counter - 1, 0, 0);
+    self.addMove(counter, 0, counter - 1, -1, 0);
+    self.addMove(counter, 0, counter + 1, -1, 0);
+    self.addMove(counter, 0, counter, -1, 0);
+    self.addMove(counter, self.sizeY, counter - 1, self.sizeY, 0);
+    self.addMove(counter, self.sizeY, counter - 1, self.sizeY + 1, 0);
+    self.addMove(counter, self.sizeY, counter + 1, self.sizeY + 1, 0);
+    self.addMove(counter, self.sizeY, counter, self.sizeY + 1, 0);
+  end;
+
+  //bramki
+  for counter := self.sizeX div 2 - 1 to self.sizeX div 2 do
+  begin
+    self.addMove(counter, -1, counter + 1, -1, 0);
+    self.addMove(counter, self.sizeY + 1, counter + 1, self.sizeY + 1, 0);
+  end;
+
+  self.addMove(self.sizeX div 2 - 1, 0, self.sizeX div 2 - 1, -1, 0);
+  self.addMove(self.sizeX div 2 - 1, self.sizeY, self.sizeX div 2 -
+    1, self.sizeY + 1, 0);
+  self.addMove(self.sizeX div 2 + 1, 0, self.sizeX div 2 + 1, -1, 0);
+  self.addMove(self.sizeX div 2 + 1, self.sizeY, self.sizeX div 2 +
+    1, self.sizeY + 1, 0);
+
+  //trzeba zrobic "ukosy" od bramek
+
 end;
 
 end.
