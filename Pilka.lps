@@ -8,12 +8,10 @@
         <Filename Value="Pilka.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Pilka"/>
-        <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="125"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="126"/>
       </Unit0>
       <Unit1>
         <Filename Value="main_window.pas"/>
@@ -24,9 +22,9 @@
         <UnitName Value="Main_Window"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="74"/>
+        <TopLine Value="2"/>
         <CursorPos X="23" Y="100"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
@@ -37,19 +35,18 @@
         <WindowIndex Value="0"/>
         <TopLine Value="409"/>
         <CursorPos X="34" Y="431"/>
-        <UsageCount Value="107"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="game.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Game"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="81"/>
-        <CursorPos X="7" Y="99"/>
-        <UsageCount Value="81"/>
+        <TopLine Value="244"/>
+        <CursorPos X="28" Y="271"/>
+        <UsageCount Value="82"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -58,19 +55,20 @@
         <UnitName Value="History"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="75"/>
+        <TopLine Value="80"/>
         <CursorPos X="28" Y="103"/>
-        <UsageCount Value="55"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="board.pas"/>
         <UnitName Value="Board"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="284"/>
-        <CursorPos X="49" Y="313"/>
-        <UsageCount Value="60"/>
+        <TopLine Value="289"/>
+        <CursorPos X="56" Y="316"/>
+        <UsageCount Value="61"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -108,12 +106,10 @@
       </Unit9>
       <Unit10>
         <Filename Value="Pilka.lpi"/>
-        <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="XML"/>
       </Unit10>
       <Unit11>
@@ -127,18 +123,16 @@
       <Unit12>
         <Filename Value="pilka_package.pas"/>
         <UnitName Value="Pilka_Package"/>
-        <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit12>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="5" HistoryIndex="4">
+    <JumpHistory Count="7" HistoryIndex="6">
       <Position1>
         <Filename Value="main_window.pas"/>
         <Caret Line="79" Column="34" TopLine="71"/>
@@ -159,6 +153,14 @@
         <Filename Value="main_window.pas"/>
         <Caret Line="111" Column="27" TopLine="94"/>
       </Position5>
+      <Position6>
+        <Filename Value="game.pas"/>
+        <Caret Line="264" Column="11" TopLine="236"/>
+      </Position6>
+      <Position7>
+        <Filename Value="game.pas"/>
+        <Caret Line="261" Column="34" TopLine="239"/>
+      </Position7>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

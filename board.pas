@@ -260,6 +260,7 @@ begin
       begin
         self.drawLine(x, y, x - tempMove.X, y + tempMove.Y, clRed);
       end;
+      self.drawBall(x - tempMove.X, y + tempMove.Y, DOT_COLOR);
     end;
     tempVar := tempVar shr 2;
   end;
@@ -300,12 +301,23 @@ var
   counter: integer;
   temp: ^TSegment;
 begin
-  self.drawLine(move.fromx, move.fromy, move.tox, move.toy, clGreen);
-  self.drawBall(move.tox, move.toy, DOT_COLOR);
-  self.drawBall(move.fromx, move.fromy, clWhite);
   self.myBoardRep.removeMove(move.fromx, move.fromy, move.tox, move.toy);
   self.lastBallPosY:=move.fromy;
   self.lastBallPosX:=move.fromx;
+    self.drawLine(move.fromx, move.fromy, move.tox, move.toy, clGreen);
+    self.drawBall(move.tox, move.toy, DOT_COLOR);
+    self.drawBall(move.fromx, move.fromy, clWhite);
+  self.drawTBoardPoint(self.myBoardRep.points[move.fromx, move.fromy - 1], move.fromx, move.fromy - 1);
+  self.drawTBoardPoint(self.myBoardRep.points[move.fromx, move.fromy + 1], move.fromx, move.fromy + 1);
+  self.drawTBoardPoint(self.myBoardRep.points[move.fromx + 1, move.fromy], move.fromx + 1, move.fromy);
+  self.drawTBoardPoint(self.myBoardRep.points[move.fromx - 1, move.fromy], move.fromx - 1, move.fromy);
+    self.drawBall(move.fromx, move.fromy + 1, DOT_COLOR);
+    self.drawBall(move.fromx, move.fromy - 1, DOT_COLOR);
+    self.drawBall(move.fromx - 1, move.fromy, DOT_COLOR);
+    self.drawBall(move.fromx + 1, move.fromy, DOT_COLOR);
+
+
+
 end;
 
 procedure TBoard.drawRedo(move: TSegment);

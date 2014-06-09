@@ -92,11 +92,10 @@ begin
     if (self.history.counter = 0) then
     begin
       turn := 1;
-      self.history.writeYourself();
     end;
     setState(TState.Playing);
-
   end;
+
   if self.state = TState.Playing then
   begin
     if self.players[turn] = Human then
@@ -259,7 +258,18 @@ begin
     tempSegment := self.history.redo();
     self.board.drawRedo(tempSegment);
     turn := tempSegment.byWho;
-    endTurn();
+    showMessage(intToStr(tempSegment.byWho));
+    if (self.board.myBoardRep.points[self.board.lastBallPosX,
+    self.board.lastBallPosY].isFree()) then
+  begin
+
+    turn := 1 + ((turn) mod 2);
+    self.lastEndTurnPoint.X := self.board.lastBallPosX;
+    self.lastEndTurnPoint.Y := self.board.lastBallPosY;
+    self.handleTurn();
+    self.endTurnButton.Enabled := False;
+    self.history.endMove();
+  end;
     self.handleTurn();
 
   end;
