@@ -92,41 +92,16 @@ begin
     if (self.history.counter = 0) then
     begin
       turn := 1;
-    end
-    else
-    begin
-
-      self.history.undo();
-      tempSegment := self.history.redo();
-      //ShowMessage(IntToStr(tempSegment.fromx) + ' ' + IntToStr(tempSegment.fromy) +
-      //  ' ' + IntToStr(tempSegment.tox) + ' ' + IntToStr(tempSegment.toy) +
-      //  ' ' + IntToStr(tempSegment.byWho) + ' ');
-      if (self.board.myBoardRep.points[tempSegment.tox, tempSegment.toy].isFree()) then
-      begin
-        turn := (tempSegment.byWho mod 2) + 1;
-        // showMessage('hej');
-      end
-      else
-      begin
-        turn := (tempSegment.byWho);
-      end;
-      handleTurn();
-
-      self.endTurn();
+      self.history.writeYourself();
     end;
+    setState(TState.Playing);
 
-    setState(Playing);
   end;
   if self.state = TState.Playing then
   begin
     if self.players[turn] = Human then
     begin
-      if not self.canEndTurn() then
-      begin
-
         self.makeMove();
-
-      end;
     end;
   end;
 end;
@@ -158,12 +133,12 @@ begin
           clicked.X, clicked.Y, turn);
         self.history.addSegment(tempSegment);
         self.board.makeMove(clicked.X, clicked.Y, turn);
+  self.endTurn();
+  self.checkEndOfGame();
       end;
     end;
 
   end;
-  self.endTurn();
-  self.checkEndOfGame();
 end;
 
 procedure TGame.endTurn();         //TODO
@@ -264,26 +239,34 @@ begin
 end;
 
 procedure TGame.undoClick();
+var tempSegment: TSegment;
 begin
   if (self.history.canUndo()) then
   begin
-    self.board.drawUndo(self.history.undo());
-    self.setState(Undoing);  //PO KAZDYM UNDO ZMIANA TURN!!
+    tempSegment := self.history.undo();
+    self.board.drawUndo(tempSegment);
+    turn := tempSegment.byWho;
+    self.handleTurn();
+    self.setState(TState.Undoing);  //PO KAZDYM UNDO ZMIANA TURN!!
   end;
 end;
 
 procedure TGame.redoClick();
+var tempSegment: TSegment;
 begin
   if (self.history.canRedo()) then
   begin
-    self.board.drawRedo(self.history.redo());
-    self.setState(Undoing);
+    tempSegment := self.history.redo();
+    self.board.drawRedo(tempSegment);
+    turn := tempSegment.byWho;
+    endTurn();
+    self.handleTurn();
+
   end;
 end;
 
 procedure TGame.endUndoRedoClick();
 begin
-
 end;
 
 end.

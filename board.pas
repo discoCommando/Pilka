@@ -311,7 +311,6 @@ end;
 procedure TBoard.drawRedo(move: TSegment);
 begin
   self.makeMove(move.tox, move.toy, move.byWho);
-  showMessage(intToStr(move.byWho));
 end;
 
 end.
