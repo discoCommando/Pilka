@@ -1,12 +1,12 @@
 object Form1: TForm1
-  Left = 158
-  Height = 543
-  Top = 134
-  Width = 794
+  Left = 153
+  Height = 558
+  Top = 24
+  Width = 817
   AutoSize = True
   Caption = 'Piłka'
-  ClientHeight = 543
-  ClientWidth = 794
+  ClientHeight = 558
+  ClientWidth = 817
   Color = 811020
   Menu = MainMenu1
   OnCreate = FormCreate
@@ -20,9 +20,9 @@ object Form1: TForm1
     Stretch = True
   end
   object Button1: TButton
-    Left = 680
+    Left = 640
     Height = 88
-    Top = 104
+    Top = 176
     Width = 80
     Caption = 'Button1'
     OnClick = Button1Click
@@ -31,33 +31,61 @@ object Form1: TForm1
   object GameLabel: TLabel
     Left = 640
     Height = 88
-    Top = 456
+    Top = 440
     Width = 154
     AutoSize = False
-    Caption = 'Game Info'
+    Caption = 'Info o Grze'
     Color = clWindowText
     Font.Color = clWhite
     ParentColor = False
     ParentFont = False
     Transparent = False
+    WordWrap = True
   end
   object Button2: TButton
-    Left = 576
+    Left = 640
     Height = 67
-    Top = 72
+    Top = 64
     Width = 80
     Caption = 'Button2'
     OnClick = Button2Click
     TabOrder = 1
   end
   object EndTurnButton: TButton
-    Left = 653
+    Left = 640
     Height = 40
-    Top = 336
-    Width = 124
-    Caption = 'End of Turn'
+    Top = 400
+    Width = 154
+    Caption = 'Koniec Tury'
     OnClick = EndTurnButtonClick
     TabOrder = 2
+  end
+  object UndoButton: TButton
+    Left = 640
+    Height = 39
+    Top = 320
+    Width = 77
+    Caption = 'Undo'
+    OnClick = UndoButtonClick
+    TabOrder = 3
+  end
+  object RedoButton: TButton
+    Left = 720
+    Height = 39
+    Top = 320
+    Width = 74
+    Caption = 'Redo'
+    OnClick = RedoButtonClick
+    TabOrder = 4
+  end
+  object EndUndoRedoButton: TButton
+    Left = 640
+    Height = 39
+    Top = 360
+    Width = 154
+    Caption = 'Koniec Undo i Redo'
+    OnClick = EndUndoRedoButtonClick
+    TabOrder = 5
   end
   object MainMenu1: TMainMenu
     left = 536

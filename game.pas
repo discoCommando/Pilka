@@ -5,7 +5,8 @@ unit Game;
 interface
 
 uses
-  Classes, SysUtils, StdCtrls, Buttons, Board, Forms, Controls;
+  Classes, SysUtils, StdCtrls, Buttons, Board, Forms, Controls, History,
+  BoardRepresentation, Dialogs;
 
 type
   TState = (Playing, Undoing, NotPlaying);
@@ -15,21 +16,30 @@ type
   TGame = class
   public
     constructor Create(var b: TBoard; firstHuman, secondHuman: boolean;
-      var endTurnBut: TButton; var gameLabel: TLabel);
+      var h: THistory; var endTurnBut, undoBut, redoBut, endUndoRedoBut: TButton;
+      var gameLabel: TLabel);
     procedure OnClick();  //dodaj historie do konstruktora
     procedure endTurn();
+    procedure undoClick();
+    procedure redoClick();
+    procedure endUndoRedoClick();
   private
     turn: integer;
     board: TBoard;
+    history: THistory;
     players: array [1..2] of TPlayer;
     state: TState;
     lastEndTurnPoint: TPoint; //punkt na ktorym ktoś ostatnio skończył
     endTurnButton: TButton;
+    undoButton: TButton;
+    redoButton: TButton;
+    endUndoRedoButton: TButton;
     infoLabel: TLabel;
     procedure handleTurn();
     procedure makeMove();
     procedure checkEndOfGame();
     function canEndTurn(): boolean;
+    procedure setState(s: TState);
   end;
 
 
@@ -38,7 +48,8 @@ type
 implementation
 
 constructor TGame.Create(var b: TBoard; firstHuman, secondHuman: boolean;
-  var endTurnBut: TButton; var gameLabel: TLabel);
+  var h: THistory; var endTurnBut, undoBut, redoBut, endUndoRedoBut: TButton;
+  var gameLabel: TLabel);
 begin
   if firstHuman then
   begin
@@ -58,7 +69,6 @@ begin
   end;
 
   self.board := b;
-  self.state := TState.Playing;
   self.turn := 1;
   self.lastEndTurnPoint.X := self.board.lastBallPosX;
   self.lastEndTurnPoint.Y := self.board.lastBallPosY;
@@ -66,11 +76,47 @@ begin
   self.endTurnButton.Enabled := False;
   self.infoLabel := gameLabel;
   self.infoLabel.Caption := 'Tura Gracza: ' + IntToStr(turn);
+  self.history := h;
+  self.endUndoRedoButton := endUndoRedoBut;
+  self.undoButton := undoBut;
+  self.redoButton := redoBut;
+  self.setState(Playing);
 end;
 
 procedure TGame.OnClick();
-
+var
+  tempSegment: TSegment;
 begin
+  if self.state = TState.Undoing then
+  begin
+    if (self.history.counter = 0) then
+    begin
+      turn := 1;
+    end
+    else
+    begin
+
+      self.history.undo();
+      tempSegment := self.history.redo();
+      //ShowMessage(IntToStr(tempSegment.fromx) + ' ' + IntToStr(tempSegment.fromy) +
+      //  ' ' + IntToStr(tempSegment.tox) + ' ' + IntToStr(tempSegment.toy) +
+      //  ' ' + IntToStr(tempSegment.byWho) + ' ');
+      if (self.board.myBoardRep.points[tempSegment.tox, tempSegment.toy].isFree()) then
+      begin
+        turn := (tempSegment.byWho mod 2) + 1;
+        // showMessage('hej');
+      end
+      else
+      begin
+        turn := (tempSegment.byWho);
+      end;
+      handleTurn();
+
+      self.endTurn();
+    end;
+
+    setState(Playing);
+  end;
   if self.state = TState.Playing then
   begin
     if self.players[turn] = Human then
@@ -93,6 +139,7 @@ end;
 procedure TGame.makeMove();      //sprawdzanie czy koniec
 var
   clicked: TPoint;
+  tempSegment: TSegment;
 begin
   clicked := self.board.giveClickedPoint();
   if (clicked.X <> -1) or (clicked.Y <> -1) then
@@ -101,16 +148,22 @@ begin
       (abs(clicked.Y - self.board.lastBallPosY) <= 1) and
       ((clicked.X <> self.board.lastBallPosX) or
       (clicked.Y <> self.board.lastBallPosY))) then
+
     begin
       if (self.board.myBoardRep.isLineFree(self.board.lastBallPosX,
         self.board.lastBallPosY, clicked.X, clicked.Y)) then
       begin
+        tempSegment := TSegment.Create();
+        tempSegment.setSegment(self.board.lastBallPosX, self.board.lastBallPosY,
+          clicked.X, clicked.Y, turn);
+        self.history.addSegment(tempSegment);
         self.board.makeMove(clicked.X, clicked.Y, turn);
       end;
     end;
 
   end;
-  self.canEndTurn();
+  self.endTurn();
+  self.checkEndOfGame();
 end;
 
 procedure TGame.endTurn();         //TODO
@@ -122,6 +175,7 @@ begin
     self.lastEndTurnPoint.Y := self.board.lastBallPosY;
     self.handleTurn();
     self.endTurnButton.Enabled := False;
+    self.history.endMove();
   end;
 end;
 
@@ -151,6 +205,83 @@ end;
 
 
 procedure TGame.checkEndOfGame();
+begin
+  if self.state = TState.Playing then
+  begin
+    if (self.board.myBoardRep.points[self.board.lastBallPosX,
+      self.board.lastBallPosY].noWayOut()) then  //nie da sie wyjsc
+    begin
+      self.infoLabel.Caption :=
+        'KONIEC GRY!!! Wygrana Gracza: ' + IntToStr(1 + (turn mod 2)) +
+        ' poprzez zaklinowanie się przeciwnika!';
+      self.setState(NotPlaying);
+    end
+    else if (abs(self.board.lastBallPosX - (self.board.sizeX div 2)) <= 1) then
+
+    begin
+      if ((self.board.lastBallPosY = -1)) then
+      begin
+        self.infoLabel.Caption := 'KONIEC GRY!!! Gracz 1 strzela GOLA';
+        self.setState(NotPlaying);
+      end
+      else if (self.board.lastBallPosY = self.board.sizeY + 1) then
+      begin
+        self.setState(NotPlaying);
+        self.infoLabel.Caption := 'KONIEC GRY!!! Gracz 2 strzela GOLA';
+      end;
+    end;
+  end;
+end;
+
+procedure TGame.setState(s: TState);
+begin
+  if (s = TState.NotPlaying) then
+  begin
+    self.endTurnButton.Enabled := False;
+    self.endUndoRedoButton.Enabled := False;
+    self.redoButton.Enabled := False;
+    self.undoButton.Enabled := False;
+    self.state := NotPlaying;
+  end
+  else if (s = TState.Playing) then
+  begin
+    self.endUndoRedoButton.Enabled := False;
+    self.redoButton.Enabled := True;
+    self.undoButton.Enabled := True;
+    self.endTurnButton.Enabled := False;
+    self.canEndTurn();
+    self.state := Playing;
+  end
+  else if (s = TState.Undoing) then
+  begin
+
+    self.endUndoRedoButton.Enabled := True;
+    self.redoButton.Enabled := True;
+    self.undoButton.Enabled := True;
+    self.endTurnButton.Enabled := False;
+    self.state := Undoing;
+  end;
+end;
+
+procedure TGame.undoClick();
+begin
+  if (self.history.canUndo()) then
+  begin
+    self.board.drawUndo(self.history.undo());
+    self.setState(Undoing);  //PO KAZDYM UNDO ZMIANA TURN!!
+  end;
+end;
+
+procedure TGame.redoClick();
+begin
+  if (self.history.canRedo()) then
+  begin
+    self.board.drawRedo(self.history.redo());
+    self.setState(Undoing);
+  end;
+end;
+
+procedure TGame.endUndoRedoClick();
 begin
 
 end;

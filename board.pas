@@ -6,13 +6,16 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  glib2, BoardRepresentation;
+  BoardRepresentation;
 
 type
   TBoard = class(TImage)
+  const
+    MAX_SIZE = 1599;
+    DOT_COLOR = $000C600C;
   private
     { Private declarations }
-    rects: array [0..1599] of TRect;
+    rects: array [0..MAX_SIZE] of TRect;
     procedure drawRects(x, y: integer);  //rozmiary planszy
     procedure drawGround(x, y: integer); //rozmiary planszy
     procedure drawLines(x, y: integer); //rysowanie granic boiska
@@ -41,6 +44,8 @@ type
     procedure makeMove(x, y, playerNo: integer); //x ,y - wspolrzedne punktu docelowego
     procedure drawFromBR(var rep: TBoardRep);
     function giveClickedPoint(): TPoint; //daje współrzędne punktu
+    procedure drawUndo(move: TSegment);
+    procedure drawRedo(move: TSegment);
   published
     { Published declarations }
   end;
@@ -94,16 +99,18 @@ begin
   counterY := 0;
   counter := 0;
   self.Canvas.Brush.Color := $000C600C;
-  for counterX := 0 to x + 2 do
+  for counterX := -1 to x + 1 do
   begin
-    for counterY := 0 to y + 4 do
+    for counterY := -2 to y + 2 do
     begin
-      rects[counter] := Rect(counterX * (RECT_SIZE) + 1, counterY *
-        (RECT_SIZE) + 1, (counterX + 1) * (RECT_SIZE) - 1, (counterY + 1) *
-        (RECT_SIZE) - 1);
+      //rects[counter] := Rect(counterX * (RECT_SIZE) + 1, counterY *
+      //  (RECT_SIZE) + 1, (counterX + 1) * (RECT_SIZE) - 1, (counterY + 1) *
+      //  (RECT_SIZE) - 1);
+      //
+      //self.Canvas.FillRect(rects[counter]);
+      //counter := counter + 1;
 
-      self.Canvas.FillRect(rects[counter]);
-      counter := counter + 1;
+      self.drawBall(counterX, counterY, DOT_COLOR);
     end;
   end;
 end;
@@ -165,8 +172,6 @@ begin
 end;
 
 procedure TBoard.drawRect(x, y: integer);
-var
-  counter: integer;
 begin
 
   self.Canvas.Brush.Color := $000C600C;
@@ -188,7 +193,8 @@ begin
   end;
   self.Canvas.Pen.Color := col;
   self.drawLine(x, y, col);
-  self.drawBall(lastBallPosX, lastBallPosY, col);
+  self.drawBall(lastBallPosX, lastBallPosY, DOT_COLOR);
+  //self.drawBall(lastBallPosX, lastBallPosY, col);
   self.drawBall(x, y, clWhite);
   self.myBoardRep.addMove(lastBallPosX, lastBallPosY, x, y, playerNo);
   lastBallPosX := x;
@@ -197,6 +203,7 @@ end;
 
 procedure TBoard.drawLine(x, y: integer; col: TColor);
 begin
+  self.Canvas.Pen.Color:=col;
   self.Canvas.Line((lastBallPosX + 1) * RECT_SIZE, (lastBallPosY + 2) * RECT_SIZE,
     (x + 1) * RECT_SIZE, (y + 2) * RECT_SIZE);
 end;
@@ -285,6 +292,26 @@ begin
     end;
   end;
   giveClickedPoint := res;
+end;
+
+
+procedure TBoard.drawUndo(move: TSegment);
+var
+  counter: integer;
+  temp: ^TSegment;
+begin
+  self.drawLine(move.fromx, move.fromy, move.tox, move.toy, clGreen);
+  self.drawBall(move.tox, move.toy, DOT_COLOR);
+  self.drawBall(move.fromx, move.fromy, clWhite);
+  self.myBoardRep.removeMove(move.fromx, move.fromy, move.tox, move.toy);
+  self.lastBallPosY:=move.fromy;
+  self.lastBallPosX:=move.fromx;
+end;
+
+procedure TBoard.drawRedo(move: TSegment);
+begin
+  self.makeMove(move.tox, move.toy, move.byWho);
+  showMessage(intToStr(move.byWho));
 end;
 
 end.

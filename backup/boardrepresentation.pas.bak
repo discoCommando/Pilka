@@ -11,6 +11,7 @@ type
 
   TBoardPoint = class
   private
+    function findPlace(moveUp, moveRight: integer): integer;
   protected
   public
     pt: integer; // 00 00 00 00 00 00 00 00
@@ -18,27 +19,41 @@ type
     constructor Create();
     procedure addMove(moveUp, moveRight, byWho: integer);
     //moveUp = 1 - do góry, moveUp = 0 - nic, moveUp = -1 - do dołu etc.
+    procedure removeMove(moveUp, moveRight: integer);
     function isFree(): boolean;
     function isFreeLine(direction: integer): boolean;
+    function noWayOut(): boolean;//sprawdza czy wszystkie kierunki są zajęte
   end;
 
-  TMoveRep = class
+  TSegment = class
   private
   protected
   public
-
+    fromx: integer;
+    fromy: integer;
+    tox: integer;
+    toy: integer;
+    byWho: integer;
+    procedure setSegment(fx, fy, tx, ty, who: integer);
+    constructor Create();
+    procedure write();
   end;
 
-  TMoveCont = class
+  TMove = class
   private
     container: TList;
   protected
   public
-    procedure addToMe(var another: TMoveCont);
-    procedure addToMe(var moveRep: TMoveRep);
+    finished: boolean;
+    procedure addToMe(var another: TMove);
+    procedure addToMe(var moveRep: TSegment);
     constructor Create();
-    destructor Destroy();
+    constructor CreateFinished();
+    destructor Destroy(); override;
     function getContainer(): TList;
+    function isEmpty(): boolean;
+    procedure clean();
+    procedure Write();
   end;
 
   TPossibleMoves = class
@@ -59,12 +74,12 @@ type
     sizeX, sizeY: integer;
     points: array [-1..MAX_SIZE + 1, -2..MAX_SIZE + 2] of TBoardPoint; //x, y
     constructor Create();
-    function giveMoves(): TMoveCont;
+    function giveMoves(): TMove;
     procedure setSize(x, y: integer);
     procedure addMove(fromx, fromy, tox, toy, who: integer);
     procedure setBallPos(x, y: integer);
     function isLineFree(fromX, fromY, toX, toY: integer): boolean;
-
+    procedure removeMove(fromx, fromy, tox, toy: integer);
   private
     posMoves: TPossibleMoves;
     procedure borders();
@@ -92,7 +107,7 @@ begin
   posMoves := TPossibleMoves.Create;
 end;
 
-function TBoardRep.giveMoves(): TMoveCont;
+function TBoardRep.giveMoves(): TMove;
 begin
 
 end;
@@ -108,6 +123,8 @@ procedure TBoardRep.addMove(fromx, fromy, tox, toy, who: integer);
 begin
   self.points[fromx, fromy].addMove(fromx - tox, toy - fromy, who);
   self.points[tox, toy].addMove(tox - fromx, fromy - toy, who);
+  ballPosX := tox;
+  ballPosY := toy;
 end;
 
 procedure TBoardRep.setBallPos(x, y: integer);
@@ -116,27 +133,28 @@ begin
   ballPosY := y;
 end;
 
-procedure TMoveCont.addToMe(var another: TMoveCont);
+procedure TMove.addToMe(var another: TMove);
 begin
   container.AddList(another.getContainer());
 end;
 
-procedure TMoveCont.addToMe(var moveRep: TMoveRep);
+procedure TMove.addToMe(var moveRep: TSegment);
 begin
-  container.Add(Pointer(moveRep));
+  container.Add(@moveRep);
 end;
 
-constructor TMoveCont.Create();
+constructor TMove.Create();
 begin
-  container.Create;
+  container := TList.Create;
+  self.finished := False;
 end;
 
-destructor TMoveCont.Destroy();
+destructor TMove.Destroy();
 begin
   container.Destroy();
 end;
 
-function TMoveCont.getContainer: TList;
+function TMove.getContainer: TList;
 begin
   getContainer := container;
 end;
@@ -146,51 +164,7 @@ procedure TBoardPoint.addMove(moveUp, moveRight, byWho: integer);
 var
   place, by1: integer;
 begin
-  if moveUp = 1 then
-  begin
-    if moveRight = 1 then
-    begin
-      place := 2;
-    end
-    else if moveRight = 0 then
-    begin
-      place := 0;
-    end
-    else
-    begin
-      place := 14;
-    end;
-  end
-  else if moveUp = 0 then
-  begin
-    if moveRight = 1 then
-    begin
-      place := 4;
-    end
-    else if moveRight = 0 then
-    begin
-      //impossible
-    end
-    else
-    begin
-      place := 12;
-    end;
-  end
-  else
-  begin
-    if moveRight = 1 then
-    begin
-      place := 6;
-    end
-    else if moveRight = 0 then
-    begin
-      place := 8;
-    end
-    else
-    begin
-      place := 10;
-    end;
-  end;
+  place := self.findPlace(moveUp, moveRight);
   if byWho = 1 then
     by1 := 1
   else
@@ -327,9 +301,151 @@ begin
   self.addMove(self.sizeX div 2 - 1, 0, self.sizeX div 2 - 1, -1, 0);
   self.addMove(self.sizeX div 2 - 1, self.sizeY, self.sizeX div 2 -
     1, self.sizeY + 1, 0);
+  self.addMove(self.sizeX div 2 + 1, 0, self.sizeX div 2 + 1, -1, 0);
+  self.addMove(self.sizeX div 2 + 1, self.sizeY, self.sizeX div 2 +
+    1, self.sizeY + 1, 0);
 
-  //trzeba zrobic "ukosy" od bramek
+end;
 
+function TBoardPoint.noWayOut(): boolean;
+var
+  counter, i: integer;
+begin
+  counter := 0;
+  for i := 0 to 7 do
+  begin
+    counter := counter + ((self.pt shr (i * 2)) and 1);
+  end;
+  noWayOut := counter = 8;
+
+end;
+
+function TMove.isEmpty(): boolean;
+begin
+  isEmpty := self.container.Count = 0;
+end;
+
+constructor TMove.CreateFinished();
+begin
+  self.finished := True;
+end;
+
+
+procedure TMove.clean();
+begin
+  while self.container.Count > 0 do
+  begin
+    self.container.Remove(self.container.First);
+  end;
+  self.finished := False;
+end;
+
+procedure TMove.Write();
+var
+  i: integer;
+  temp: ^TSegment;
+begin
+  for i := 0 to self.container.Count - 1 do
+  begin
+    temp := self.container.Items[i];
+
+    //ShowMessage(IntToStr(temp^.x) + ' ' + IntToStr(temp^.y));
+  end;
+end;
+
+
+constructor TSegment.Create();
+begin
+end;
+
+
+procedure TSegment.setSegment(fx, fy, tx, ty, who: integer);
+begin
+  fromx := fx;
+  fromy := fy;
+  tox := tx;
+  toy := ty;
+  byWho := who;
+end;
+
+procedure TBoardRep.removeMove(fromx, fromy, tox, toy: integer);
+begin
+  self.points[fromx, fromy].removeMove(fromx - tox, toy - fromy);
+  self.points[tox, toy].removeMove(tox - fromx, fromy - toy);
+  ballPosX := tox;
+  ballPosY := toy;
+end;
+
+
+function TBoardPoint.findPlace(moveUp, moveRight: integer): integer;
+var
+  place: integer;
+begin
+
+  if moveUp = 1 then
+  begin
+    if moveRight = 1 then
+    begin
+      place := 2;
+    end
+    else if moveRight = 0 then
+    begin
+      place := 0;
+    end
+    else
+    begin
+      place := 14;
+    end;
+  end
+  else if moveUp = 0 then
+  begin
+    if moveRight = 1 then
+    begin
+      place := 4;
+    end
+    else if moveRight = 0 then
+    begin
+      //impossible
+    end
+    else
+    begin
+      place := 12;
+    end;
+  end
+  else
+  begin
+    if moveRight = 1 then
+    begin
+      place := 6;
+    end
+    else if moveRight = 0 then
+    begin
+      place := 8;
+    end
+    else
+    begin
+      place := 10;
+    end;
+  end;
+  findPlace := place;
+end;
+
+procedure TBoardPoint.removeMove(moveUp, moveRight: integer);
+var
+  place: integer;
+begin
+  place := self.findPlace(moveUp, moveRight);
+  pt := (pt) and ((not (1 shl place)) or (not(1 shl (place + 1))));
+end;
+
+
+procedure TSegment.write();
+begin
+
+    ShowMessage( ' segment: ' +
+      IntToStr(fromx) + ' ' + IntToStr(fromy) +
+      ' ' + IntToStr(tox) + ' ' + IntToStr(toy) +
+      ' ' + IntToStr(byWho));
 end;
 
 end.

@@ -1,0 +1,118 @@
+unit History;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, Boardrepresentation, Dialogs;
+
+type
+
+
+
+  THistory = class
+  const
+    MAX_SIZE = 16;
+  public
+    counter: integer;
+    constructor Create(ballPosX, ballPosY: integer);
+    function undo(): TSegment;
+    function canUndo(): boolean;
+    function redo(): TSegment;
+    function canRedo(): boolean;
+    procedure addSegment(var s: TSegment);
+    procedure endMove();
+    procedure writeYourself();
+  private
+    size: integer;
+    container: TList;
+  end;
+
+implementation
+
+constructor THistory.Create(ballPosX, ballPosY: integer);
+var
+  i: integer;
+  tempSeg: TSegment;
+begin
+  counter := 0;
+  size := 0;
+  self.container := TList.Create;
+end;
+
+
+function THistory.undo(): TSegment;    //undo musi być poprzedzone procedurą canUndo
+var
+  tempMove: TMove;
+  tempSegment: ^TSegment;
+begin
+  counter := counter - 1;
+  tempSegment := self.container.Items[counter];
+  undo := tempSegment^;
+end;
+
+function THistory.canUndo(): boolean;
+begin
+  canUndo := counter > 0;
+end;
+
+function THistory.redo(): TSegment;
+var
+  tempSegment: ^TSegment;
+begin
+  tempSegment := self.container.Items[counter];
+  redo := tempSegment^;
+  counter := counter + 1;
+end;
+
+function THistory.canRedo(): boolean;
+begin
+  canRedo := counter < self.container.Count;
+end;
+
+procedure THistory.endMove();
+var
+  psegment: ^TSegment;
+  segment: TSegment;
+begin
+
+end;
+
+procedure THistory.addSegment(var s: TSegment);
+var
+  i: integer;
+  newSegment: ^TSegment;
+begin
+  if counter < self.container.Count then
+  begin
+    for i := counter to self.container.Count - 1 do
+    begin
+      self.container.Remove(self.container.Last);
+    end;
+
+  end;
+  new(newSegment);
+  newSegment^ := TSegment.Create();
+  newSegment^.fromx := s.fromx;
+  newSegment^.fromy := s.fromy;
+  newSegment^.tox := s.tox;
+  newSegment^.toy := s.toy;
+  newSegment^.byWho:=s.byWho;
+  self.container.Add(newSegment);
+  counter := counter + 1;
+end;
+
+procedure THistory.writeYourself();
+var
+  i: integer;
+  tempSegment: ^TSegment;
+begin
+  for i := 0 to counter - 1 do
+  begin
+    tempSegment := self.container.Items[i];
+    tempSegment^.Write();
+  end;
+end;
+
+end.
